@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "zkada"
+version = "0.1.0"
+description = ""
+authors = ["Niels Mündler <n.muendler@posteo.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+opshin = "^0.14.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
