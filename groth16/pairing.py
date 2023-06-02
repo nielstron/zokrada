@@ -27,6 +27,8 @@ def pairing_addition(p1: G1Point, p2: G1Point) -> G1Point:
     """
     the sum of two points of G1
     """
+    # equivalent to precompiled bn256add
+    # https://docs.moonbeam.network/builders/pallets-precompiles/precompiles/eth-mainnet/
     # TODO black magic addition
     return G1Point(0, 0)
 
@@ -36,6 +38,8 @@ def pairing_scalar_mul(p: G1Point, s: int) -> G1Point:
     returns the product of a point p on G1 and a scalar s, i.e.
     p == p.scalar_mul(1) and p.addition(p) == p.scalar_mul(2) for all points p.
     """
+    # equivalent to precompiled bn256mul
+    # https://docs.moonbeam.network/builders/pallets-precompiles/precompiles/eth-mainnet/
     # TODO black magic scalar mul
     return G1Point(0, 0)
 
@@ -47,6 +51,8 @@ def pairing_pairing(p1: List[G1Point], p2: List[G2Point]) -> bool:
     For example pairing([P1(), P1().negate()], [P2(), P2()]) should
     return true.
     """
+    # equivalent to precompiled bn128pairing
+    # https://docs.moonbeam.network/builders/pallets-precompiles/precompiles/eth-mainnet/
     # TODO black magic pairing check
     return False
 
