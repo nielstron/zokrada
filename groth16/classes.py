@@ -1,9 +1,11 @@
 from opshin.prelude import *
 
+
 @dataclass
 class G1Point(PlutusData):
     x: int
     y: int
+
 
 @dataclass
 class G2Point(PlutusData):
@@ -12,11 +14,18 @@ class G2Point(PlutusData):
     y1: int
     y2: int
 
+
 @dataclass
 class Proof(PlutusData):
     a: G1Point
     b: G2Point
     c: G1Point
 
-def validator(proof: Proof, input: int, context: ScriptContext):
-    pass
+
+@dataclass
+class VerifyingKey(PlutusData):
+    alpha: G1Point
+    beta: G2Point
+    gamma: G2Point
+    delta: G2Point
+    gamma_abc: List[G1Point]
