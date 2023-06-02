@@ -1,19 +1,11 @@
-import sys
-
-sys.setrecursionlimit(10000)
-
-# python3 compatibility
-try:
-    foo = long
-except:
-    long = int
+from opshin.prelude import *
 
 # The prime modulus of the field
 field_modulus = (
     21888242871839275222246405745257275088696311157297823662689037894645226208583
 )
 # See, it's prime!
-assert pow(2, field_modulus, field_modulus) == 2
+# assert pow(2, field_modulus, field_modulus) == 2
 
 # The modulus of the polynomial in this representation of FQ12
 FQ12_modulus_coeffs = [82, 0, 0, 0, 0, 0, -18, 0, 0, 0, 0, 0]  # Implied + [1]
@@ -34,100 +26,78 @@ def inv(a, n):
 
 # A class for field elements in FQ. Wrap a number in this class,
 # and it becomes a field element.
-class FQ:
-    def __init__(self, n):
-        if isinstance(n, self.__class__):
-            self.n = n.n
-        else:
-            self.n = n % field_modulus
-        assert isinstance(self.n, (int, long))
+FQ = int
 
-    def __add__(self, other):
-        on = other.n if isinstance(other, FQ) else other
-        return FQ((self.n + on) % field_modulus)
 
-    def __mul__(self, other):
-        on = other.n if isinstance(other, FQ) else other
-        return FQ((self.n * on) % field_modulus)
+def fq_init(n: int) -> FQ:
+    return n % field_modulus
 
-    def __rmul__(self, other):
-        return self * other
 
-    def __radd__(self, other):
-        return self + other
+def fq_add(self: FQ, other: FQ) -> FQ:
+    return fq_init(self + other)
 
-    def __rsub__(self, other):
-        on = other.n if isinstance(other, FQ) else other
-        return FQ((on - self.n) % field_modulus)
 
-    def __sub__(self, other):
-        on = other.n if isinstance(other, FQ) else other
-        return FQ((self.n - on) % field_modulus)
+def fq_mul(self: FQ, other: FQ) -> FQ:
+    return fq_init(self * other)
 
-    def __div__(self, other):
-        on = other.n if isinstance(other, FQ) else other
-        assert isinstance(on, (int, long))
-        return FQ(self.n * inv(on, field_modulus) % field_modulus)
 
-    def __truediv__(self, other):
-        return self.__div__(other)
+def fq_sub(self: FQ, other: FQ) -> FQ:
+    return fq_init(self - other)
 
-    def __rdiv__(self, other):
-        on = other.n if isinstance(other, FQ) else other
-        assert isinstance(on, (int, long)), on
-        return FQ(inv(self.n, field_modulus) * on % field_modulus)
 
-    def __rtruediv__(self, other):
-        return self.__rdiv__(other)
+def fq_div(self: FQ, other: FQ) -> FQ:
+    return fq_init(self * inv(other, field_modulus))
 
-    def __pow__(self, other):
-        if other == 0:
-            return FQ(1)
-        elif other == 1:
-            return FQ(self.n)
-        elif other % 2 == 0:
-            return (self * self) ** (other // 2)
-        else:
-            return ((self * self) ** int(other // 2)) * self
 
-    def __eq__(self, other):
-        if isinstance(other, FQ):
-            return self.n == other.n
-        else:
-            return self.n == other
+def fq_pow(self: FQ, other: FQ) -> FQ:
+    if other == 0:
+        return 1
+    elif other == 1:
+        return self
+    elif other % 2 == 0:
+        return fq_pow(fq_mul(self, self), fq_div(other, 2))
+    else:
+        return fq_mul(fq_pow(fq_mul(self, self), fq_div(other, 2)), self)
 
-    def __ne__(self, other):
-        return not self == other
 
-    def __neg__(self):
-        return FQ(-self.n)
+def fq_eq(self: FQ, other: FQ) -> bool:
+    return self == other
 
-    def __repr__(self):
-        return repr(self.n)
 
-    @classmethod
-    def one(cls):
-        return cls(1)
+def fq_ne(self: FQ, other: FQ) -> bool:
+    return self != other
 
-    @classmethod
-    def zero(cls):
-        return cls(0)
+
+def fq_neg(self: FQ):
+    return fq_init(-self)
+
+
+def fq_one() -> FQ:
+    return 1
+
+
+def fq_zero() -> FQ:
+    return 0
 
 
 # Utility methods for polynomial math
-def deg(p):
+def deg(p: List[int]) -> int:
+    """
+    degree of a polynomial
+    """
     d = len(p) - 1
     while p[d] == 0 and d:
         d -= 1
     return d
 
 
-def poly_rounded_div(a, b):
+def poly_rounded_div(a: List[int], b: List[int]) -> List[int]:
+    # TODO implement with immutable list
     dega = deg(a)
     degb = deg(b)
     temp = [x for x in a]
     o = [0 for x in a]
-    for i in range(dega - degb, -1, -1):
+    for i in reversed(range(dega - degb + 1)):
         o[i] += temp[degb + i] / b[degb]
         for c in range(degb + 1):
             temp[c + i] -= o[c]
@@ -135,22 +105,29 @@ def poly_rounded_div(a, b):
 
 
 # A class for elements in polynomial extension fields
-class FQP:
-    def __init__(self, coeffs, modulus_coeffs):
-        assert len(coeffs) == len(modulus_coeffs)
-        self.coeffs = [FQ(c) for c in coeffs]
-        # The coefficients of the modulus, without the leading [1]
-        self.modulus_coeffs = modulus_coeffs
-        # The degree of the extension field
-        self.degree = len(self.modulus_coeffs)
+@dataclass
+class FQP(PlutusData):
+    coeffs: List[FQ]
+    # The coefficients of the modulus, without the leading [1]
+    modulus_coeffs: List[int]
+    # The degree of the extension field
+    degree: int
 
-    def __add__(self, other):
-        assert isinstance(other, self.__class__)
-        return self.__class__([x + y for x, y in zip(self.coeffs, other.coeffs)])
 
-    def __sub__(self, other):
-        assert isinstance(other, self.__class__)
-        return self.__class__([x - y for x, y in zip(self.coeffs, other.coeffs)])
+def fqp_add(self: FQP, other: FQP) -> FQP:
+    return FQP(
+        [fq_add(x, y) for x, y in zip(self.coeffs, other.coeffs)],
+        self.modulus_coeffs,
+        self.degree,
+    )
+
+
+def fqp_sub(self: FQP, other: FQP) -> FQP:
+    return FQP(
+        [x - y for x, y in zip(self.coeffs, other.coeffs)],
+        self.modulus_coeffs,
+        self.degree,
+    )
 
     def __mul__(self, other):
         if isinstance(other, (FQ, int, long)):

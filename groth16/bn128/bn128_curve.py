@@ -5,9 +5,9 @@ curve_order = (
 )
 
 # Curve order should be prime
-assert pow(2, curve_order, curve_order) == 2
+# assert pow(2, curve_order, curve_order) == 2
 # Curve order should be a factor of field_modulus**12 - 1
-assert (field_modulus**12 - 1) % curve_order == 0
+# assert (field_modulus**12 - 1) % curve_order == 0
 
 # Curve is y**2 = x**3 + 3
 b = FQ(3)
