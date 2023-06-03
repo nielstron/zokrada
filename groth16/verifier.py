@@ -10,11 +10,14 @@ def verify(verifying_key: VerifyingKey, input: List[int], proof: Proof) -> bool:
         verifying_key.gamma_abc
     ), "Length of verifying key and input are incompatible"
     # Compute the linear comnbination vk_x
-    vk_x = G1Point(0, 0)
+    from groth16.bn128.bn128_curve import is_on_curve, b, FQ
+    vk_x = vk.gamma_abc[0]
+    assert is_on_curve((FQ(vk_x.x), FQ(vk_x.y)), b)
     for j, i in zip(vk.gamma_abc[1:], input):
         assert i < snark_scalar_field, "Input value too large"
         vk_x = pairing_addition(vk_x, pairing_scalar_mul(j, i))
-    vk_x = pairing_addition(vk_x, vk.gamma_abc[0])
+        assert is_on_curve((FQ(vk_x.x), FQ(vk_x.y)), b)
+    # assert is_on_curve((FQ(vk_x.x), FQ(vk_x.y)), b)
     return pairing_prod_4(
         proof.a,
         proof.b,

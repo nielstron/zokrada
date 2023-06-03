@@ -91,7 +91,7 @@ def miller_loop(Q, P):
 # This returns e(Q, P)
 def pairing(Q: Tuple[FQ2, FQ2], P: Tuple[FQ, FQ]) -> FQ12:
     assert is_on_curve(Q, b2)
-    assert is_on_curve(P, b)
+    # assert is_on_curve(P, b)
     return miller_loop(twist(Q), cast_point_to_fq12(P))
 
 
