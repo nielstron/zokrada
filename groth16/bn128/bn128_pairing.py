@@ -1,3 +1,5 @@
+from typing import Tuple, List
+
 from .bn128_curve import (
     double,
     add,
@@ -86,7 +88,8 @@ def miller_loop(Q, P):
 
 
 # Pairing computation
-def pairing(Q, P):
+# This returns e(Q, P)
+def pairing(Q: Tuple[FQ2, FQ2], P: FQ2) -> FQ12:
     assert is_on_curve(Q, b2)
     assert is_on_curve(P, b)
     return miller_loop(twist(Q), cast_point_to_fq12(P))
@@ -94,3 +97,17 @@ def pairing(Q, P):
 
 def final_exponentiate(p):
     return p ** ((field_modulus**12 - 1) // curve_order)
+
+def is_one(p: FQ12) -> bool:
+    return FQ12.one() == p
+
+def product(xs):
+    r = 1
+    for x in xs:
+        r *= x
+    return r
+
+def optimal_ate_pairing_check(points: List[Tuple[FQ2, Tuple[FQ2, FQ2]]]):
+    es = [pairing(p2, p1) for p1, p2 in points]
+    prod = product(es)
+    return is_one(prod)
