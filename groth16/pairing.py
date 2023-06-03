@@ -30,11 +30,11 @@ def pairing_addition(p1: G1Point, p2: G1Point) -> G1Point:
     # equivalent to precompiled bn256add
     # https://docs.moonbeam.network/builders/pallets-precompiles/precompiles/eth-mainnet/
     # TODO black magic addition
-    from groth16.bn128.bn128_curve import add, FQ2
-    mp1 = FQ2([p1.x, p1.y])
-    mp2 = FQ2([p2.x, p2.y])
+    from groth16.bn128.bn128_curve import add, FQ2, FQ
+    mp1 = (FQ(p1.x), FQ(p1.y))
+    mp2 = (FQ(p2.x), FQ(p2.y))
     mr = add(mp1, mp2)
-    r = G1Point(*mr.coeffs)
+    r = G1Point(mr[0].n, mr[1].n)
     return r
 
 
@@ -46,10 +46,10 @@ def pairing_scalar_mul(p: G1Point, s: int) -> G1Point:
     # equivalent to precompiled bn256mul
     # https://docs.moonbeam.network/builders/pallets-precompiles/precompiles/eth-mainnet/
     # TODO black magic scalar mul
-    from groth16.bn128.bn128_curve import multiply, FQ2
-    mp = FQ2([p.x, p.y])
+    from groth16.bn128.bn128_curve import multiply, FQ
+    mp = (FQ(p.x), FQ(p.y))
     mr = multiply(mp, s)
-    r = G1Point(*mr.coeffs)
+    r = G1Point(mr[0].n, mr[1].n)
     return r
 
 def pairing_check(ps1: List[G1Point], ps2: List[G2Point]) -> bool:
@@ -63,9 +63,9 @@ def pairing_check(ps1: List[G1Point], ps2: List[G2Point]) -> bool:
     # https://docs.moonbeam.network/builders/pallets-precompiles/precompiles/eth-mainnet/
     # go implementation https://github.com/ethereum/go-ethereum/blob/c7c84ca16c724edbf9adad10893de502a5ee7e0a/core/vm/contracts.go#L511
     # TODO black magic pairing check
-    from groth16.bn128.bn128_pairing import optimal_ate_pairing_check, final_exponentiate, FQ2
-    mp1 = [FQ2([p1.x, p1.y]) for p1 in ps1]
-    mp2 = [(FQ2([p2.x1, p2.y1]), FQ2([p2.x2, p2.y2])) for p2 in ps2]
+    from groth16.bn128.bn128_pairing import optimal_ate_pairing_check, FQ2, FQ
+    mp1 = [(FQ(p1.x), FQ(p1.y)) for p1 in ps1]
+    mp2 = [(FQ2([FQ(p2.x1), FQ(p2.y1)]), FQ2([FQ(p2.x2), FQ(p2.y2)])) for p2 in ps2]
     return optimal_ate_pairing_check(zip(mp1, mp2))
 
 

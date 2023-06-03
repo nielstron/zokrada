@@ -107,7 +107,7 @@ def product(xs):
         r *= x
     return r
 
-def optimal_ate_pairing_check(points: List[Tuple[FQ2, Tuple[FQ2, FQ2]]]):
+def optimal_ate_pairing_check(points: List[Tuple[Tuple[FQ, FQ], Tuple[FQ2, FQ2]]]):
     es = [pairing(p2, p1) for p1, p2 in points]
     prod = product(es)
     return is_one(prod)
