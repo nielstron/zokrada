@@ -98,4 +98,4 @@ def pairing_prod_4(
     """
     Convenience method for a pairing check of four pairs
     """
-    return pairing_pairing([a1, b1, c1, d1], [a2, b2, c2, d2])
+    return pairing_check([a1, b1, c1, d1], [a2, b2, c2, d2])
