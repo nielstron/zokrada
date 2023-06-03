@@ -66,7 +66,7 @@ def pairing_check(ps1: List[G1Point], ps2: List[G2Point]) -> bool:
     from groth16.bn128.bn128_pairing import optimal_ate_pairing_check, FQ2, FQ
     mp1 = [(FQ(p1.x), FQ(p1.y)) for p1 in ps1]
     mp2 = [(FQ2([FQ(p2.x1), FQ(p2.x2)]), FQ2([FQ(p2.y1), FQ(p2.y2)])) for p2 in ps2]
-    return optimal_ate_pairing_check(zip(mp1, mp2))
+    return optimal_ate_pairing_check(list(zip(mp1, mp2)))
 
 
 def pairing_prod_2(a1: G1Point, a2: G2Point, b1: G1Point, b2: G2Point) -> bool:
