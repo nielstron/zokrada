@@ -15,7 +15,7 @@ def verify(verifying_key: VerifyingKey, input: List[int], proof: Proof) -> bool:
         assert i < snark_scalar_field, "Input value too large"
         vk_x = pairing_addition(vk_x, pairing_scalar_mul(j, i))
     vk_x = pairing_addition(vk_x, vk.gamma_abc[0])
-    return not pairing_prod_4(
+    return pairing_prod_4(
         proof.a,
         proof.b,
         pairing_negate(vk_x),
