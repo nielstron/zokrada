@@ -1,4 +1,4 @@
-from zokrada.classes import *
+from .classes import *
 
 # this corresponds to verification.key output of zokrates
 
