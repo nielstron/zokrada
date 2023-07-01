@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11"
-opshin = "^0.15.2"
+opshin = { git = "https://github.com/opshin/opshin.git", branch = "feat/bn256-pairings" }
 pluthon = { git = "https://github.com/opshin/pluthon.git", branch = "feat/bn128-pairings" }
 uplc = { git = "https://github.com/opshin/uplc.git", branch = "feat/bn256-pairing" }
 
