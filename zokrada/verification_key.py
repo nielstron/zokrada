@@ -1,4 +1,4 @@
-from groth16.classes import *
+from zokrada.classes import *
 
 # this corresponds to verification.key output of zokrates
 

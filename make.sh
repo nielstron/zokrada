@@ -1,1 +1,1 @@
- python3 -m opshin build spending groth16/verifier.py "$(python3 groth16/verification_key.py)" "$(python3 groth16/input_length.py)"
+ python3 -m opshin build spending zokrada/verifier.py "$(python3 zokrada/verification_key.py)" "$(python3 zokrada/input_length.py)"

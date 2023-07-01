@@ -1,6 +1,6 @@
-from groth16.verification_key import verifying_key
-from groth16.verifier import validator
-from groth16.classes import Proof, G1Point, G2Point
+from zokrada.verification_key import verifying_key
+from zokrada.verifier import validator
+from zokrada.classes import Proof, G1Point, G2Point
 
 print(
     validator(

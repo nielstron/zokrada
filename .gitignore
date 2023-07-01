@@ -1,3 +1,13 @@
+abi.json
+out
+out.r1cs
+out.wtns
+proof.json
+proving.key
+root.zok
+verification.key
+verifier.sol
+witness
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm+all
 

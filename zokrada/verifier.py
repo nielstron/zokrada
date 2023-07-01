@@ -1,4 +1,4 @@
-from groth16.pairing import *
+from zokrada.pairing import *
 
 
 def verify(verifying_key: VerifyingKey, input: List[int], proof: Proof) -> bool:
@@ -10,7 +10,7 @@ def verify(verifying_key: VerifyingKey, input: List[int], proof: Proof) -> bool:
         verifying_key.gamma_abc
     ), "Length of verifying key and input are incompatible"
     # Compute the linear comnbination vk_x
-    from groth16.bn128.bn128_curve import is_on_curve, b, FQ
+    from zokrada.bn128.bn128_curve import is_on_curve, b, FQ
     vk_x = vk.gamma_abc[0]
     assert is_on_curve((FQ(vk_x.x), FQ(vk_x.y)), b)
     for j, i in zip(vk.gamma_abc[1:], input):
@@ -30,7 +30,7 @@ def verify(verifying_key: VerifyingKey, input: List[int], proof: Proof) -> bool:
     )
 
 
-# the cardano validator for groth16 zksnarks onchain verifier is a parameterized script
+# the cardano validator for zokrada zksnarks onchain verifier is a parameterized script
 def validator(
     verifying_key: VerifyingKey,
     input_length: int,
