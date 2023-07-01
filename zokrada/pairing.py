@@ -2,17 +2,17 @@ from zokrada.classes import *
 from opshin.bridge import wraps_builtin
 
 @wraps_builtin
-def bn256_add(x: Anything, y: Anything) -> Anything:
+def bn256_add(x: G1Point, y: G1Point) -> G1Point:
     pass
 
 
 @wraps_builtin
-def bn256_mul(x: Anything, y: int) -> Anything:
+def bn256_mul(x: G1Point, y: int) -> G1Point:
     pass
 
 
 @wraps_builtin
-def bn128_pairing(x: List[Anything], y: List[Anything]) -> bool:
+def bn128_pairing(x: List[G2Point], y: List[G2Point]) -> bool:
     pass
 
 # Generator of G1
