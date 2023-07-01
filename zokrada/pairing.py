@@ -34,8 +34,10 @@ def pairing_negate(p: G1Point) -> G1Point:
     Negation of p i.e. addition(p, negation(p)) == 0
     """
     if p.x == 0 and p.y == 0:
-        return G1Point(0, 0)
-    return G1Point(p.x, q - (p.y % q))
+        res = G1Point(0, 0)
+    else:
+        res = G1Point(p.x, q - (p.y % q))
+    return res
 
 pairing_check = bn128_pairing
 pairing_addition = bn256_add
