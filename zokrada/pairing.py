@@ -12,7 +12,7 @@ def bn256_mul(x: G1Point, y: int) -> G1Point:
 
 
 @wraps_builtin
-def bn128_pairing(x: List[G2Point], y: List[G2Point]) -> bool:
+def bn128_pairing(x: List[G1Point], y: List[G2Point]) -> bool:
     pass
 
 # Generator of G1
